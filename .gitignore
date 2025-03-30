@@ -67,4 +67,8 @@ venv
 # MyPy cache
 .mypy_cache/
 
-.db
+*.db
+*.sqlite
+*.sqlite3
+
+.env
