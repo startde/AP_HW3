@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from database import Link, Counter
-import utils
+import utils as utils
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
 from fastapi import Depends
