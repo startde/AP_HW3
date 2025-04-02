@@ -1,14 +1,8 @@
 import pytest
-from fastapi import status, Depends
+from fastapi import status
 from src.models import UserCreate, UserInfo
-from fastapi.security import OAuth2PasswordRequestForm
-import json
-from src.database import User, get_db
-from tests.conftest import override_get_db
-from src.models import LinkCreate, LinkInfo
+from src.models import LinkInfo
 from pydantic import HttpUrl
-from src.database import Link
-from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
 
 @pytest.mark.asyncio
@@ -39,12 +33,6 @@ async def test_register_user(client):
     assert user_info.username == user_data["username"]
     assert user_info.email == user_data["email"]
     assert user_info.id is not None
-
-    # async with async_session() as db:  # Use your async session
-    #     user = await db.execute(select(User).where(User.email == user_data["email"])) # User from models
-    #     user = user.scalar_one_or_none()
-    #     assert user is not None
-    #     assert user.email == user_data["email"]
 
 @pytest.mark.asyncio
 async def test_login(client):

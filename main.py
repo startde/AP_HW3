@@ -5,13 +5,11 @@ import src.database as database
 import uvicorn
 from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Приложение запускается...")
-    scheduler = AsyncIOScheduler()
     await database.create_database() # Создаем таблицы при запуске
     yield
     print("Приложение завершает работу...")

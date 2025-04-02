@@ -7,7 +7,7 @@ from src.links import create_short_link, get_original_url, update_link, delete_l
 from src.models import  LinkCreate, LinkInfo
 from datetime import datetime
 from typing import Optional
-import redis.asyncio as redis # Импортируем redis
+import redis.asyncio as redis
 from src.cache import get_redis, get_cache, set_cache, delete_cache
 
 router = APIRouter(

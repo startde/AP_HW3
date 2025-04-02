@@ -1,8 +1,5 @@
-import os
-from dotenv import load_dotenv
 import sqlalchemy
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, BigInteger
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, BigInteger
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from datetime import datetime

@@ -3,9 +3,8 @@ from sqlalchemy import select
 from src.database import Link, Counter
 import src.utils as utils
 from fastapi import HTTPException, status
-from datetime import datetime, timedelta
-from fastapi import Depends
-from src.models import LinkCreate, LinkInfo
+from datetime import datetime
+from src.models import LinkCreate
 
 async def get_next_counter_value(db: AsyncSession):
     """Получает следующее значение счетчика из базы данных"""

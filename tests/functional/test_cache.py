@@ -34,12 +34,9 @@ async def test_integration_cache():
     async with redis.Redis(connection_pool=redis_pool) as client:
         key = "test_key_integration"
         value = "test_value"
-        # Устанавливаем значение
         await set_cache(key, value, redis_client=client)
-        # Получаем значение
         cached_value = await get_cache(key, redis_client=client)
         assert cached_value == value
-        # Удаляем значение
         await delete_cache(key, redis_client=client)
         cached_value = await get_cache(key, redis_client=client)
         assert cached_value is None

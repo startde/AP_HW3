@@ -20,7 +20,7 @@ async def set_cache(
          redis_client = redis.Redis(connection_pool=redis_pool)
          close_conn = True
     try:
-        await redis_client.set(key, value, ex=expire) # ex - время жизни в секундах
+        await redis_client.set(key, value, ex=expire) 
     finally:
         if close_conn:
             await redis_client.close()

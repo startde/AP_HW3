@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import get_db
-from src.auth import create_user, authenticate_user, create_jwt_token, get_current_user
+from src.auth import create_user, authenticate_user, create_jwt_token
 from src.models import UserCreate, UserInfo
 
 router = APIRouter(
@@ -42,6 +42,5 @@ async def login(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # Создаем JWT токен
     token = create_jwt_token(user.username)
     return {"access_token": token, "token_type": "bearer"}

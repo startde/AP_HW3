@@ -1,19 +1,11 @@
 import pytest
 import asyncio
-from fastapi import FastAPI
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool 
-from src.database import User
 from main import app
 from src.database import Base, get_db
-from src.auth import create_jwt_token
-from datetime import datetime
-from src.database import Link
-import pytest_asyncio
-
-# sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -58,33 +50,3 @@ def event_loop():
     yield loop
     loop.close()
 
-# @pytest.fixture
-# async def db_session():
-#     """Фикстура для создания асинхронной сессии базы данных."""
-#     engine = create_async_engine(TEST_DATABASE_URL, echo=True)
-#     async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-    
-#     # Создание всех таблиц в памяти
-#     async with engine.begin() as conn:
-#         await conn.run_sync(Base.metadata.create_all)
-    
-#     async with async_session() as session:
-#         yield session
-
-# @pytest.fixture
-# async def test_user(db_session: AsyncSession):
-#     """Фикстура для создания тестового пользователя."""
-#     user = User(
-#         username="testuser",
-#         email="test@example.com",
-#         hashed_password="hashed_password",
-#     )
-#     db_session.add(user)
-#     await db_session.commit()
-#     await db_session.refresh(user)
-#     return user
-
-# @pytest.fixture
-# def jwt_token(test_user):
-#     """Фикстура для создания JWT токена."""
-#     return create_jwt_token(test_user.username)

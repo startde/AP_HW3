@@ -18,8 +18,6 @@ async def create_user(
         db: AsyncSession = Depends(get_db)
 ):
     """Регистрирует нового пользователя"""
-
-    #Проверяем, существует ли уже пользователь с таким username или email
     result = await db.execute(select(User).where(User.username == user.username))
     existing_user = result.scalar_one_or_none()
     if existing_user:
@@ -28,13 +26,11 @@ async def create_user(
             detail= "Username already registered"
         )
     
-    #Хешируем пароль
     hashed_password = bcrypt.hashpw(
         user.password.encode('utf-8'),
         bcrypt.gensalt()
     )
 
-    #Создание нового пользователя
     db_user = User(
         username= user.username,
         hashed_password= hashed_password,
@@ -42,9 +38,8 @@ async def create_user(
         created_at= datetime.utcnow()
     )
 
-    #Сохранение пользователя в БД
     db.add(db_user)
-    await db.commit()  # Await the commit
+    await db.commit() 
     await db.refresh(db_user)
 
     return db_user
@@ -121,16 +116,10 @@ async def get_current_user_optional(
      if token is None:
          return None
      try:
-         # Попытка получить пользователя, как в get_current_user
-         credentials_exception = HTTPException(
-             status_code=status.HTTP_401_UNAUTHORIZED,
-             detail="Could not validate credentials",
-             headers={"WWW-Authenticate": "Bearer"},
-         )
          payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
          username: str = payload.get("sub")
          if username is None:
-              return None # Или можно вызвать исключение, если токен есть, но он невалиден
+              return None 
          result = await db.execute(select(User).where(User.username == username))
          user = result.scalar_one_or_none()
          return user
