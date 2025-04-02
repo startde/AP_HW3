@@ -262,4 +262,4 @@ curl -X POST -H "Content-Type: application/json" -d '{
     *   Введите желаемое количество пользователей и скорость добавления.
     *   Нажмите кнопку "Start swarming", чтобы начать нагрузочное тестирование.
 
-## Фото деплоя и API доступны в ./photos/deploy.txt
+## Фото деплоя и API доступны [здесь](./photos/deploy.txt)
