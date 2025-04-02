@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from routers.auth_router import router as auth_router
-from routers.links_router import router as links_router
-import database as database
+from src.routers.auth_router import router as auth_router
+from src.routers.links_router import router as links_router
+import src.database as database
 import uvicorn
 from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware

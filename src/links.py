@@ -1,11 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from database import Link, Counter
-import utils as utils
+from src.database import Link, Counter
+import src.utils as utils
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
 from fastapi import Depends
-from models import LinkCreate, LinkInfo
+from src.models import LinkCreate, LinkInfo
 
 async def get_next_counter_value(db: AsyncSession):
     """Получает следующее значение счетчика из базы данных"""

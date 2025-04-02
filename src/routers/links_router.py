@@ -1,14 +1,14 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db, User
-from auth import get_current_user, get_current_user_optional
-from links import create_short_link, get_original_url, update_link, delete_link, search_link_by_original_url, get_link_info
-from models import  LinkCreate, LinkInfo
+from src.database import get_db, User
+from src.auth import get_current_user, get_current_user_optional
+from src.links import create_short_link, get_original_url, update_link, delete_link, search_link_by_original_url, get_link_info
+from src.models import  LinkCreate, LinkInfo
 from datetime import datetime
 from typing import Optional
 import redis.asyncio as redis # Импортируем redis
-from cache import get_redis, get_cache, set_cache, delete_cache
+from src.cache import get_redis, get_cache, set_cache, delete_cache
 
 router = APIRouter(
     prefix= "/links",
@@ -20,7 +20,8 @@ STATS_CACHE_PREFIX = "stats:"
 STATS_CACHE_TTL = 300
 
 @router.get(
-        "/search"
+        "/search",
+        status_code = status.HTTP_200_OK
         )
 async def search_url(
     original_url: str, 
@@ -61,8 +62,6 @@ async def redirect_url(
     ):
 
     cache_key = f"{LINK_CACHE_PREFIX}{short_code}"
-
-    # 1. Проверка кэша
     cached_url = await get_cache(cache_key, redis_client)
     if cached_url:
         print(f"Кэш HIT для {short_code}")
@@ -72,24 +71,18 @@ async def redirect_url(
         short_code=short_code, 
         db=db
         )
-     # Ссылка не найдена
     if not db_link:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Short link not found"
         )
 
-    #Ссылка найдена, проверяем expires_at
-    if db_link.expires_at and datetime.utcnow() > db_link.expires_at:
-        # Срок действия истек!
+    if db_link.expires_at != "NULL" and datetime.utcnow() > db_link.expires_at:
         print(f"Ссылка {short_code} истекла {db_link.expires_at}")
 
-        #Удалить ссылку
         await db.delete(db_link)
         await db.commit()
-        #Удаляем из кэша
         await delete_cache(cache_key, redis_client)
-        # Возвращаем ошибку
         raise HTTPException(
             status_code=status.HTTP_410_GONE, 
             detail="Short link has expired or does not exist"
@@ -104,7 +97,8 @@ async def redirect_url(
 
 @router.put(
         "/{short_code}", 
-        response_model=LinkInfo
+        response_model=LinkInfo,
+        status_code= status.HTTP_200_OK
         )
 async def update_url(
     short_code: str, 
@@ -125,7 +119,10 @@ async def update_url(
         )
     return db_link
 
-@router.delete("/{short_code}")
+@router.delete(
+        "/{short_code}",
+        status_code= status.HTTP_200_OK
+        )
 async def delete_url(
     short_code: str, 
     db: AsyncSession = Depends(get_db), 
@@ -140,7 +137,8 @@ async def delete_url(
 
 @router.get(
         "/{short_code}/stats", 
-        response_model=LinkInfo
+        response_model=LinkInfo,
+        status_code= status.HTTP_200_OK
         )
 async def get_info(
     short_code: str, 

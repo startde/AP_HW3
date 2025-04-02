@@ -2,11 +2,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from database import get_db, User
+from src.database import get_db, User
 import bcrypt
 from datetime import datetime, timedelta
-from models import UserCreate
-from config import JWT_ALGORITHM, JWT_SECRET_KEY
+from src.models import UserCreate
+from src.config import JWT_ALGORITHM, JWT_SECRET_KEY
 from jose import jwt, JWTError
 from typing import Optional
 
